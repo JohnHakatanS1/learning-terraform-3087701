@@ -46,6 +46,7 @@ module "autoscaling" {
   security_groups  = [module.blog_sg.security_group_id]
   image_id           = data.aws_ami.app_ami.id
   instance_type = var.instance_type
+  target_group_arn    = module.blog_alb.target_groups[0].arn
 
 }
 
@@ -74,9 +75,11 @@ module "blog_alb" {
       protocol        = "HTTPS"
       certificate_arn = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
 
-      forward = {
-        target_group_key = "ex-instance"
+    default_action {
+        type             = "forward"
+        target_group_arn = module.blog_alb.target_groups[0].arn
       }
+
     }
   }
 
@@ -97,7 +100,7 @@ module "blog_alb" {
 }
 
 output "target_group_arns" {
-  value = module.blog_alb.target_groups[*].arn
+  value = module.blog_alb.target_groups[0].arn
 }
 
 module "blog_sg" {

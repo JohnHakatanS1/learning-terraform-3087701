@@ -75,7 +75,7 @@ module "blog_alb" {
       protocol        = "HTTPS"
       certificate_arn = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
 
-    default_action {
+    default_action ={
         type             = "forward"
         target_group_arn = module.blog_alb.target_groups[0].arn
       }
